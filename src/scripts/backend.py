@@ -1,4 +1,3 @@
-
 """ 
       MAIN BACKEND MODULE:
 
@@ -39,49 +38,65 @@ class ChatBot:
     def respond(chatbot # Conversation history
                 , message, # User's query 
                 data_type = "Built-in files Q&A", # Mode selected. Could also be "Upload a new file"
-                temperature= 0.2) -> Tuple:
-        if data_type == "Built-in files Q&A": 
-            if os.path.exists(YML.persist_directory): # Why would you create a new vectordb if it already uploads them in 'prepare_vectordb.py'
-                vectordb = Chroma(persist_directory=YML.persist_directory,
-                                  embedding_function=YML.embedding_model)
-            else:
-                chatbot.append(
-                    (message, f"VectorDB does not exist. Please first execute the 'upload_data_manually.py' module."))
-                return "", chatbot, None
-        elif data_type == "Upload file Q&A":
-            if os.path.exists(YML.custom_persist_directory):
-                vectordb = Chroma(persist_directory=YML.custom_persist_directory,
-                                  embedding_function=YML.embedding_model)
-            else:
-                chatbot.append(
-                    (message, f"No file was uploaded. Make sure you have clicked the 'upload' button."))
-                return "", chatbot, None
+                temperature= 0.2,
+                model = YML.llm_model,
+                k_retrieval = YML.k,
+                chat_history_k = YML.number_of_q_a_pairs,
+                embedding_model = YML.embedding_model) -> Tuple:
+        
 
-        docs = vectordb.similarity_search(message, k=YML.k) #Searching in the vectorstore based on the query 
+        print("PARAMTERS ARE: \n")
+        print(temperature, model, k_retrieval, embedding_model, chat_history_k, sep = "\n")
+        print(type(k_retrieval))
+        print("-"*60)
+
+            
+        if data_type == "Built-in files: Q&A": 
+                if os.path.exists(YML.persist_directory): # Why would you create a new vectordb if it already uploads them in 'prepare_vectordb.py'
+                    vectordb = Chroma(persist_directory=YML.persist_directory,
+                                    embedding_function=embedding_model)
+                else:
+                    chatbot.append(
+                        (message, f"VectorDB does not exist. Please first execute the 'upload_data_manually.py' module."))
+                    return "", chatbot, None
+        elif data_type == "Upload file: Q&A":
+                if os.path.exists(YML.custom_persist_directory):
+                    vectordb = Chroma(persist_directory=YML.custom_persist_directory,
+                                    embedding_function=YML.embedding_model)
+                else: 
+                    chatbot.append(
+                        (message, "No file was uploaded. Please upload one file or change to 'built-in files: Q&A' "))
+                    return "", chatbot, None
+
+        docs = vectordb.similarity_search(message, k=k_retrieval) #Searching in the vectorstore based on the query 
         print(docs)
+        print(f"I am hereeee {type(k_retrieval)}, with value {k_retrieval}")
 
         question = "# User new question:\n" + message
         retrieved_content = ChatBot.clean_references(docs) # Call function ahead of time. Clean content from retriever to guarantee better results 
-        
-        # Memory: previous two Q&A pairs
-        chat_history = f"Chat history:\n {str(chatbot[-YML.number_of_q_a_pairs:])}\n\n" # Memory keeps 4 (current value for 'number_of_q_a_pairs') of the last messages from ...
+            
+            # Memory: previous two Q&A pairs
+        chat_history = f"Chat history:\n {str(chatbot[-chat_history_k:])}\n\n" # Memory keeps 4 (current value for 'number_of_q_a_pairs') of the last messages from ...
         prompt = f"{chat_history}{retrieved_content}{question}"
         print("========================")
         print(prompt)
+
         response = client.chat.completions.create(
-        model=YML.llm_model,
+        model=model,
         messages=[
-            {"role": "system", "content": YML.llm_template},
-            {"role": "user", "content": prompt}],
-        stream=False, temperature = temperature
-        )
+                {"role": "system", "content": YML.llm_template},
+                {"role": "user", "content": prompt}],
+            stream=False, temperature = temperature
+            )
+            
         choice = response.choices[0]
         _message = choice.message
         content = _message.content
 
         chatbot.append(
-            (message, content)) # Message is user's query and content is LLM's answer 
+                (message, content)) # Message is user's query and content is LLM's answer 
         time.sleep(2)
+
 
         return "", chatbot, retrieved_content
 
@@ -134,3 +149,16 @@ class ChatBot:
             counter += 1
 
         return markdown_documents
+    
+    @staticmethod 
+    def fine_tuning(prompt):
+        symbols = ["!", "?", "*", ",", ".", ":", ";"]
+        transformed_prompt= ""
+        for i in prompt:
+            if i not in symbols:
+                transformed_prompt += i
+        greetings = [
+            "hi", "hello", "hello there", "howdy", "hi buddy", ""
+        ]
+
+        

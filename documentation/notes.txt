@@ -1,9 +1,0 @@
-REPLACEMENTS 
-
-- llm_system_role ==> llm_template
-
-
-
-CURREN QUESTIONS
-- Which functions creates the vectorstore for online docs
-- I do not get what the __loadalldocs does when branching

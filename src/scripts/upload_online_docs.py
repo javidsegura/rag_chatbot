@@ -14,16 +14,16 @@ YML = LoadConfiguration()
 
 class UploadFile: # Triggered when uploaded a file
     @staticmethod # No self attribute
-    def process_uploaded_files(files_dir, chatbot, rag_with_dropdown):
-        if rag_with_dropdown == "Upload file Q&A":
+    def process_uploaded_files(files_dir, chatbot, rag_with_dropdown, chunk_size = YML.chunk_size):
+        if rag_with_dropdown == "Upload file: Q&A":
             prepare_vectordb_instance = PrepareVectorDB(data_directory=files_dir,
                                                         persist_directory=YML.custom_persist_directory,
                                                         embedding_model_2=YML.embedding_model_2,
-                                                        chunk_size=YML.chunk_size,
+                                                        chunk_size=chunk_size,
                                                         chunk_overlap=YML.chunk_overlap)
             prepare_vectordb_instance.create_vectordb()
             chatbot.append(
-                ("I just uploaded the file.", "Files uplodaded succesfully. Please ask your question"))
+                ("I just uploaded the file.", "Indeed, files added to the knowledge base succesfully. Please ask your question"))
         elif rag_with_dropdown == "Upload file: Summary":
             final_summary = Summarizer.summarize_the_pdf(file_dir=files_dir[0],
                                                          max_final_token=YML.max_final_token,
@@ -34,7 +34,7 @@ class UploadFile: # Triggered when uploaded a file
                                                          final_summarizer_llm_template=YML.final_summarizer_llm_template,
                                                          character_overlap=YML.character_overlap)
             chatbot.append(
-                ("I just uploaded the file", final_summary))
+                ("I just uploaded the file for summary", final_summary))
         else:
             chatbot.append(
                 (" ", "It seems you have uploaded a new file. Change the mode of the model "))
