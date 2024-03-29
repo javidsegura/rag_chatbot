@@ -3,8 +3,8 @@
 directories:
   data_directory: data/docs
   data_directory_2: data/docs_2
-  persist_directory: /Users/javierdominguezsegura/Programming/Python/Side projects/RAG 4/data/vectordb/processed/chroma/ # Create db w/ this path
-  custom_persist_directory: /Users/javierdominguezsegura/Programming/Python/Side projects/RAG 4/data/vectordb/uploaded/chroma/ #If existent this will be the path
+  persist_directory: /data/vectordb/processed/chroma/ # Create db w/ this path
+  custom_persist_directory: data/vectordb/uploaded/chroma/ #If existent this will be the path
 
 embedding_model_config:
   model: "text-embedding-ada-002" 
