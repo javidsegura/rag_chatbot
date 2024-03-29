@@ -25,14 +25,14 @@ https://github.com/javidsegura/rag_chatbot/assets/129964070/f5506237-cebc-468b-8
       <li> Built-in knowledge base</li>
       <li> Speech to text feature </li>
       <li> LLM's responses references </li>
-      <li> Summarizer</li>
+      <li> Files summarizer</li>
       <li> Feedback on LLM's responses </li>
       <li> Modify retrieval chain parameters (temperature, model, k-retrievals etc) </li>
 </ul>
 
 
 
-<p> <b> Complete walkthrough here: </b> </p>
+<p> <b> Complete walkthrough: </b> </p>
 <ol>
       <li> Select to query internal knowledge base or uplaod your own files</li>
       <li> Load the files (if external),chunk them, transform them with an embedding model and store them with ChromaDB  </li>
