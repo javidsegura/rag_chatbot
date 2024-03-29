@@ -21,7 +21,7 @@ class Transcribe:
 
             # print(f"Detected language is '{('english' if info.language == "en" else info.language)}' with probability {info.language_probability}") # Detecting language based on first 30seconds 
             print("Starting to transcribe...")
-            with open("/Users/javierdominguezsegura/Programming/Python/Side projects/RAG 4/other/transcription/transcribed.txt", "w") as f:
+            with open("/Users...other/transcription/transcribed.txt", "w") as f:
                   for segment in segments: # Looping through segments (small chunks of the transcription); Transcription starts here
                         f.write(f"{segment.text} \n") # Writing to file
                         time.sleep(.4)
