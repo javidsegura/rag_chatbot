@@ -1,5 +1,4 @@
-
-# ALL THE CONFIGURATIONS IS FURTHER EXPLAIN IN 'load.configuration.py'
+# ALL THE CONFIGURATIONS IS FURTHER EXPLAINED IN 'load.configuration.py'
 
 directories:
   data_directory: data/docs
@@ -8,7 +7,7 @@ directories:
   custom_persist_directory: /Users/javierdominguezsegura/Programming/Python/Side projects/RAG 4/data/vectordb/uploaded/chroma/ #If existent this will be the path
 
 embedding_model_config:
-  model: "text-embedding-ada-002" # Is there not one that is more powerful?
+  model: "text-embedding-ada-002" 
 
 llm_config:
     llm_template: "You are a chatbot. You'll receive a prompt that includes a chat history, retrieved content from the vectorDB based on the user's question, and the source.\ 

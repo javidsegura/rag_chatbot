@@ -2,13 +2,14 @@
 
 from langchain.document_loaders import PyPDFLoader
 from scripts.count_tokens import count_num_tokens
+import openai
 from openai import OpenAI
 
 client = OpenAI()
 
 class Summarizer:
     """
-    Summarize PDFs. Summarize each page and then total pages?
+    Summarize PDFs. Summarize each page and then total pages.
     """
 
     @staticmethod

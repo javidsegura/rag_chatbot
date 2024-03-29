@@ -28,12 +28,6 @@ YML = LoadConfiguration()
 
 
 class ChatBot:
-    """
-    Class representing a chatbot with document retrieval and response generation capabilities.
-
-    This class provides static methods for responding to user queries, handling feedback, and
-    cleaning references from retrieved documents.
-    """
     @staticmethod
     def respond(chatbot # Conversation history
                 , message, # User's query 
@@ -43,21 +37,19 @@ class ChatBot:
                 k_retrieval = YML.k,
                 chat_history_k = YML.number_of_q_a_pairs,
                 embedding_model = YML.embedding_model) -> Tuple:
-        
 
-        print("PARAMTERS ARE: \n")
-        print(temperature, model, k_retrieval, embedding_model, chat_history_k, sep = "\n")
-        print(type(k_retrieval))
+        print("PARAMTERS OF THE LLM ARE: \n")
+        print(f"Temperature{temperature}", f"Model: {model}", f"K retrieval: {k_retrieval}", f"Embedding model: {embedding_model}", f"Chatbot memory {chat_history_k}", sep = "\n")
         print("-"*60)
 
             
         if data_type == "Built-in files: Q&A": 
-                if os.path.exists(YML.persist_directory): # Why would you create a new vectordb if it already uploads them in 'prepare_vectordb.py'
+                if os.path.exists(YML.persist_directory):
                     vectordb = Chroma(persist_directory=YML.persist_directory,
                                     embedding_function=embedding_model)
                 else:
                     chatbot.append(
-                        (message, f"VectorDB does not exist. Please first execute the 'upload_data_manually.py' module."))
+                        (message, f"Error1: VectorDB does not exist. Make sure to execute the 'upload_data_manually.py' first."))
                     return "", chatbot, None
         elif data_type == "Upload file: Q&A":
                 if os.path.exists(YML.custom_persist_directory):
@@ -65,22 +57,26 @@ class ChatBot:
                                     embedding_function=YML.embedding_model)
                 else: 
                     chatbot.append(
-                        (message, "No file was uploaded. Please upload one file or change to 'built-in files: Q&A' "))
+                        (message, "Error2: No file was uploaded. Please upload one file or change to 'built-in files: Q&A' "))
                     return "", chatbot, None
 
+        # VECTOR SEARCH
+        print("Starting retrieval...")
         docs = vectordb.similarity_search(message, k=k_retrieval) #Searching in the vectorstore based on the query 
-        print(docs)
-        print(f"I am hereeee {type(k_retrieval)}, with value {k_retrieval}")
+        print(f"\n\nResults from the retriever:\n \n {docs} ")
+        print("-", 60)
 
-        question = "# User new question:\n" + message
+        # USER'S QUESTION
+        question = "# USER'S QUESTION:\n" + message
         retrieved_content = ChatBot.clean_references(docs) # Call function ahead of time. Clean content from retriever to guarantee better results 
             
-            # Memory: previous two Q&A pairs
+        # MEMORY
         chat_history = f"Chat history:\n {str(chatbot[-chat_history_k:])}\n\n" # Memory keeps 4 (current value for 'number_of_q_a_pairs') of the last messages from ...
-        prompt = f"{chat_history}{retrieved_content}{question}"
+        prompt = f"{chat_history}{retrieved_content}{question}" # Complete prompt is chat history | results from the retriever | original question
         print("========================")
         print(prompt)
 
+        #LLM RESPONSE
         response = client.chat.completions.create(
         model=model,
         messages=[
@@ -89,6 +85,7 @@ class ChatBot:
             stream=False, temperature = temperature
             )
             
+        # FORMATTING RESPONSE
         choice = response.choices[0]
         _message = choice.message
         content = _message.content
@@ -102,6 +99,15 @@ class ChatBot:
 
     @staticmethod
     def clean_references(documents: List) -> str:
+
+        """ 
+        
+        Def: Cleaning up results from the retriever
+
+        Parameters: results of the retriever
+        
+        """
+
         server_url = "http://localhost:8000"
         documents = [str(x)+"\n\n" for x in documents]
         markdown_documents = ""

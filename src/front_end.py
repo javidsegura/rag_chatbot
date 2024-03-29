@@ -1,3 +1,9 @@
+""" 
+    Final module: display of app.
+
+"""
+
+
 import gradio as gr
 from scripts.upload_online_docs import UploadFile
 from scripts.backend import ChatBot
@@ -5,7 +11,8 @@ from scripts.ui_settings import UISettings
 from scripts.transcription import Transcribe
 
 
-js_func = """
+# Intending to force white them while using the app
+js_func = """ 
 function refresh() {
     const url = new URL(window.location);
 
@@ -19,18 +26,21 @@ function refresh() {
 
 
 with gr.Blocks(theme = gr.themes.Base( 
-    primary_hue= "neutral",
+    primary_hue= "neutral", #Selecting colors
       secondary_hue="gray"), 
       js = js_func) as demo:
-    with gr.Tab("Model"):
-            ##############
-            # First ROW:
-            ##############
+    with gr.Tab("Model"): 
+            
+            ###################
+            # First PAGE (MODEL):
+            ####################
+
             with gr.Row() as main_row:
                 with gr.Column(scale=11, variant="compact") as col1:
                     with gr.Row() as row_one:
-                        with gr.Column(visible=False) as reference_bar: # Reference panel
-                            ref_output = gr.Markdown() # Second alternative
+                        with gr.Column(visible=False) as reference_bar: 
+                            ref_output = gr.Markdown()
+                            # Second alternative:
                             # ref_output = gr.Textbox(
                             # lines=30,
                             # max_lines=30,
@@ -53,22 +63,21 @@ with gr.Blocks(theme = gr.themes.Base(
                                     "/Users/javierdominguezsegura/Programming/Python/Side projects/RAG 4/other/images/system.png"), # LLM picture
                                 
                             )
-                            # **Adding like/dislike icons
+                            # Adding like/dislike icons
                             chatbot.like(UISettings.feedback, None, None)
 
-                    ##############
-                    # SECOND ROW:
-                    ##############
-                    
+             
                     with gr.Row() as row_two:
                         with gr.Column(): 
-                            input_txt = gr.Textbox(
+                            input_txt = gr.Textbox( # User inputs to the model comes from here 
                                 lines=2,
                                 scale=1,
-                                placeholder="Message Socrates...",
+                                placeholder="Message Socrates...", # Socrates is an arbitrary name for the model
                                 container=False,
-                                autofocus=True,
-                                autoscroll=True, show_copy_button=True, min_width=800
+                                autofocus=True, # Focuses on the text while page laods
+                                autoscroll=True, # When text are full, it automatically scrolls down for more space
+                                show_copy_button=True, 
+                                min_width=800
                             )
                         
                                 
@@ -79,15 +88,14 @@ with gr.Blocks(theme = gr.themes.Base(
                             label="What do you want to do?", choices=["Built-in files: Q&A", "Upload file: Q&A", "Upload file: Summary"], value="Upload file: Q&A")
                         gr.Markdown()
 
-                        #4th element 
-                                #2nd button+
+                    
                         # upload_btn = gr.UploadButton(
                                     # "Upload files", file_types=['.pdf'],file_count="multiple", size = "sm")
                         upload_btn = gr.File(file_count="multiple", file_types=[".pdf"], label="Upload files")
                         
                         
 
-                                #3rd butto
+                        # Creating space
                         gr.Markdown()
                         gr.Markdown()
                         gr.Markdown()
@@ -102,7 +110,9 @@ with gr.Blocks(theme = gr.themes.Base(
                                 btn_toggle_sidebar.click(UISettings.toggle_sidebar, [sidebar_state], [reference_bar, sidebar_state]) # Activate references when clicking button 
                                 clear_button = gr.ClearButton([input_txt, chatbot],scale=3, size="sm", value = "Clear chat") #Clear chat  
 
-
+    ##############################
+    # Second PAGE (Transcription):
+    ##############################
         
     with gr.Tab("Transcription"):
          
@@ -114,9 +124,13 @@ with gr.Blocks(theme = gr.themes.Base(
                           label = "Select your model", info = "The larger the more accurate but the slower it transcribes (distilled version perfom faster with small decrese in perfomance)", value = "medium",interactive=True)
          
 
-         gr.Button("Click here to transcribe")
+         transcription_btn = gr.Button("Click here to transcribe")
 
 
+    ########################
+    # Third PAGE (Settings):
+    ########################
+         
     with gr.Tab("Settings") as Settings:
 
         temperature = gr.Slider(minimum=0, maximum=1, step=.1, info = "The closer to 1 the more creative the output", label="Temperature", value = 0, interactive=True)
@@ -127,15 +141,17 @@ with gr.Blocks(theme = gr.themes.Base(
 
         chat_history_k = gr.Slider(minimum=0, maximum=6, step=1, info = "The higher k the more accurate results, but the more processing time required", label="K chat history", value = 3, interactive=True)
 
-        gr.Button("Save changes")
+        settings_btn = gr.Button("Save changes")
 
          
 
-            ##############
-            # Process:
-            ##############
-    file_msg = upload_btn.upload(fn=UploadFile.process_uploaded_files, inputs=[upload_btn, chatbot, rag_with_dropdown], outputs=[input_txt, chatbot], queue=False)
+    ####################
+    # Processing inputs:
+    #####################
+    
+    
 
+    #User sends message via chat
     txt_msg = input_txt.submit(fn=ChatBot.respond,
                                        inputs=[chatbot, input_txt,
                                                rag_with_dropdown, 
@@ -144,7 +160,11 @@ with gr.Blocks(theme = gr.themes.Base(
                                                 chatbot, ref_output],
                                        queue=False).then(lambda: gr.Textbox(interactive=True),
                                                          None, [input_txt], queue=False)
-    transcription = audio_file.upload(fn=Transcribe.process_mp3, 
+    #User uploads file
+    file_msg = upload_btn.upload(fn=UploadFile.process_uploaded_files, inputs=[upload_btn, chatbot, rag_with_dropdown], outputs=[input_txt, chatbot], queue=False)
+    
+    #User uplaods file to transcribe
+    transcription = transcription_btn.click(fn=Transcribe.process_mp3, 
                                       inputs=[audio_file, language, transcription_model], outputs=None, queue=False)
     
 
