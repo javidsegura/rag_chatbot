@@ -18,6 +18,10 @@
   <source src="https://github.com/javidsegura/rag_chatbot/blob/main/documentation/0329(2).mov" type="video/mp4">
 </video>
 
+https://youtu.be/CWeSzhJpJ9U?si=wKEV1tx5TEfa2Kb0
+
+[![rag_chatbot](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fyoutu.be%2F2DElH6_2QtY)](https://youtu.be/2DElH6_2QtY)
+
 <hr>
 
 <p> <b> Features, described: </b> </p>
