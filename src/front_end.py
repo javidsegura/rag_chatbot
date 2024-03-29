@@ -59,8 +59,8 @@ with gr.Blocks(theme = gr.themes.Base(
                                 container=True,
                                 show_copy_button=True,
                                 avatar_images=(
-                                    "/Users/javierdominguezsegura/Programming/Python/Side projects/RAG 4/other/images/user.png", # User picture
-                                    "/Users/javierdominguezsegura/Programming/Python/Side projects/RAG 4/other/images/system.png"), # LLM picture
+                                    "/Users.../other/images/user.png", # User picture
+                                    "/Users/...other/images/system.png"), # LLM picture
                                 
                             )
                            
@@ -173,10 +173,6 @@ with gr.Blocks(theme = gr.themes.Base(
 
 if __name__ == "__main__":
 
-    demo.launch(favicon_path="/Users/javierdominguezsegura/Programming/Python/Side projects/RAG 4/other/images/system.png")
+    demo.launch(favicon_path="/Users...other/images/system.png")
 
     
-
-if __name__ == "__main__":
-
-    demo.launch(favicon_path="/Users/javierdominguezsegura/Programming/Python/Side projects/RAG 4/other/images/system.png")
