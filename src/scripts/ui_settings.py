@@ -27,15 +27,18 @@ class UISettings:
         return gr.update(visible=state), state
 
     @staticmethod
-    def feedback(data: gr.LikeData):
+    def feedback(data: gr.LikeData,chatbot):
+      user_question = chatbot[0][0]
       if data.liked:
             print("You upvoted this response: " + f"'{data.value}'")
             with open("/Users/javierdominguezsegura/Programming/Python/Side projects/RAG 4/other/user_feedback/feedback.csv", "a") as file:
                  writer = csv.writer(file,delimiter=",")
-                 writer.writerow([1,0," ",f"{data.value}"])
+                 writer.writerow([1,0,f"{user_question}",f"{data.value}"])
                 
       else:
             print("You downvoted this response: " + f"'{data.value}'")
             with open("/Users/javierdominguezsegura/Programming/Python/Side projects/RAG 4/other/user_feedback/feedback.csv", "a") as file:
                  writer = csv.writer(file,delimiter=",")
-                 writer.writerow([0,1," ",f"{data.value}"])
+                 writer.writerow([0,1,f"{user_question}",f"{data.value}"])
+
+
