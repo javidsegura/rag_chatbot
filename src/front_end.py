@@ -63,8 +63,7 @@ with gr.Blocks(theme = gr.themes.Base(
                                     "/Users/javierdominguezsegura/Programming/Python/Side projects/RAG 4/other/images/system.png"), # LLM picture
                                 
                             )
-                            # Adding like/dislike icons
-                            chatbot.like(UISettings.feedback, None, None)
+                           
 
              
                     with gr.Row() as row_two:
@@ -145,6 +144,10 @@ with gr.Blocks(theme = gr.themes.Base(
 
          
 
+     # Adding like/dislike icons
+    
+    chatbot.like(UISettings.feedback, inputs=[chatbot], outputs=None)
+
     ####################
     # Processing inputs:
     #####################
@@ -166,6 +169,12 @@ with gr.Blocks(theme = gr.themes.Base(
     #User uplaods file to transcribe
     transcription = transcription_btn.click(fn=Transcribe.process_mp3, 
                                       inputs=[audio_file, language, transcription_model], outputs=None, queue=False)
+    
+
+if __name__ == "__main__":
+
+    demo.launch(favicon_path="/Users/javierdominguezsegura/Programming/Python/Side projects/RAG 4/other/images/system.png")
+
     
 
 if __name__ == "__main__":
