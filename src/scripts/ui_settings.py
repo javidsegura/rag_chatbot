@@ -12,7 +12,7 @@ import gradio as gr
 import csv
 
 
-with open("/Users/javierdominguezsegura/Programming/Python/Side projects/RAG 4/other/user_feedback/feedback.csv", "w") as file:
+with open("/Users../other/user_feedback/feedback.csv", "w") as file:
                  writer = csv.writer(file,delimiter=",")
                  writer.writerow([0,1,"User_message", "System_message"])
 
@@ -31,13 +31,13 @@ class UISettings:
       user_question = chatbot[0][0]
       if data.liked:
             print("You upvoted this response: " + f"'{data.value}'")
-            with open("/Users/javierdominguezsegura/Programming/Python/Side projects/RAG 4/other/user_feedback/feedback.csv", "a") as file:
+            with open("/Users...other/user_feedback/feedback.csv", "a") as file:
                  writer = csv.writer(file,delimiter=",")
                  writer.writerow([1,0,f"{user_question}",f"{data.value}"])
                 
       else:
             print("You downvoted this response: " + f"'{data.value}'")
-            with open("/Users/javierdominguezsegura/Programming/Python/Side projects/RAG 4/other/user_feedback/feedback.csv", "a") as file:
+            with open("/Users...other/user_feedback/feedback.csv", "a") as file:
                  writer = csv.writer(file,delimiter=",")
                  writer.writerow([0,1,f"{user_question}",f"{data.value}"])
 
