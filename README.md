@@ -14,17 +14,8 @@
 <p>  </p>
 <hr>
 
-<video width="1000" height="600" controls>
-  <source src="https://github.com/javidsegura/rag_chatbot/blob/main/documentation/0329(2).mov" type="video/mp4">
-</video>
+https://github.com/javidsegura/rag_chatbot/assets/129964070/f5506237-cebc-468b-8254-49b6f3a7a738
 
-https://youtu.be/CWeSzhJpJ9U?si=wKEV1tx5TEfa2Kb0
-
-
-https://github.com/javidsegura/rag_chatbot/assets/129964070/78bbda8f-a1ba-4c9f-ab94-cd9af9d6a15e
-
-
-[![rag_chatbot](https://markdown-videos-api.jorgenkh.no/url?url=https%3A%2F%2Fyoutu.be%2F2DElH6_2QtY)](https://youtu.be/2DElH6_2QtY)
 
 <hr>
 
