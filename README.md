@@ -15,7 +15,7 @@
 <hr>
 
 <video width="1000" height="600" controls>
-  <source src="/documentation/0329(1).mov" type="video/mp4">
+  <source src="rag_chatbot/documentation/0329(1).mov" type="video/mp4">
 </video>
 
 <hr>
